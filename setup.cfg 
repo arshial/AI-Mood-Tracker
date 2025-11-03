@@ -1,0 +1,3 @@
+[tool.setuptools]
+packages = ["tracker"]
+package-dir = {"" = "src"}
