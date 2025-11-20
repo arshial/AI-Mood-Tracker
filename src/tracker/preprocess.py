@@ -3,6 +3,7 @@ import re
 URL_RE = re.compile(r"https?://\S+|www\.\S+")
 EMOJI_RE = re.compile(r"[\U00010000-\U0010ffff]", flags=re.UNICODE)
 
+
 def normalize_text(text: str) -> str:
     """
     Minimal, language-agnostic normalization:

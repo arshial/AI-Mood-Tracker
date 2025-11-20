@@ -6,9 +6,11 @@ from ..tracker.viz import plot_daily_trend
 
 app = FastAPI(title="AI Mood Tracker API")
 
+
 class Inp(BaseModel):
     text: str
     lang: str | None = None
+
 
 @app.post("/analyze")
 def analyze(inp: Inp):

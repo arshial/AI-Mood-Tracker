@@ -3,16 +3,24 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 
-DB_PATH = Path("data/mood.db")
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+from .config import CFG
+
+
+def _db_path() -> Path:
+    path = Path(CFG.DB_PATH)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return path
+
 
 def _ts_utc_str() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
+
 def get_conn():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(_db_path())
     conn.row_factory = sqlite3.Row
     return conn
+
 
 def init_db():
     with get_conn() as c:
@@ -29,6 +37,7 @@ def init_db():
         ''')
         c.commit()
 
+
 def insert_entry(text: str, lang: Optional[str], sentiment: str, score: float, meta: str = "") -> int:
     ts = _ts_utc_str()
     with get_conn() as c:
@@ -39,10 +48,12 @@ def insert_entry(text: str, lang: Optional[str], sentiment: str, score: float, m
         c.commit()
         return cur.lastrowid
 
+
 def fetch_entries(limit: int = 50) -> List[Dict[str, Any]]:
     with get_conn() as c:
         rows = c.execute("SELECT * FROM entries ORDER BY id DESC LIMIT ?", (limit,)).fetchall()
         return [dict(r) for r in rows]
+
 
 def fetch_daily_mean() -> List[Dict[str, Any]]:
     with get_conn() as c:

@@ -1,10 +1,12 @@
 from typing import Optional
 import json
+
 from .preprocess import normalize_text
 from .model import score_rule, HFModel
 from . import storage, config
 
 hf_model = None
+
 
 def analyze_text(text: str, lang: Optional[str] = None) -> dict:
     storage.init_db()
